@@ -1,0 +1,98 @@
+     1                                  ; Programme assembleur pour resoudre l'equation du 1er degré ax+b=c
+     2                                  
+     3                                  extern printf, scanf
+     4                                  
+     5                                  segment .data
+     6 00000000 256C6600                    promptDouble db "%lf", 0
+     7 00000004 456E7472657A206C61-         promptDoubleA db "Entrez la valeur de a : ", 0
+     7 0000000D 2076616C6575722064-
+     7 00000016 652061203A2000     
+     8 0000001D 456E7472657A206C61-         promptDoubleB db "Entrez la valeur de b : ", 0
+     8 00000026 2076616C6575722064-
+     8 0000002F 652062203A2000     
+     9 00000036 456E7472657A206C61-         promptDoubleC db "Entrez la valeur de c : ", 0
+     9 0000003F 2076616C6575722064-
+     9 00000048 652063203A2000     
+    10 0000004F 4C6120736F6C757469-         promptResultat db "La solution de l'equation %lf*x+%lf=%lf est %lf", 10, 0
+    10 00000058 6F6E206465206C2765-
+    10 00000061 71756174696F6E2025-
+    10 0000006A 6C662A782B256C663D-
+    10 00000073 256C66206573742025-
+    10 0000007C 6C660A00           
+    11                                  
+    12                                  segment .bss
+    13 00000000 <res 00000008>              a      resq 1
+    14 00000008 <res 00000008>              b      resq 1
+    15 00000010 <res 00000008>              c      resq 1
+    16 00000018 <res 00000008>              result resq 1
+    17                                  
+    18                                  segment .text
+    19                                      global main
+    20                                  main: 
+    21 00000000 55                          push rbp
+    22                                  
+    23                                    
+    24                                  
+    25                                      ;saisie et lecture de a
+    26 00000001 48BF-                       mov rdi, promptDoubleA
+    26 00000003 [0400000000000000] 
+    27 0000000B B800000000                  mov rax, 0
+    28 00000010 E8(00000000)                call printf
+    29 00000015 48BF-                       mov rdi, promptDouble
+    29 00000017 [0000000000000000] 
+    30 0000001F 48BE-                       mov rsi, a
+    30 00000021 [0000000000000000] 
+    31 00000029 B800000000                  mov rax, 0
+    32 0000002E E8(00000000)                call scanf
+    33                                  
+    34                                      ;saisie et lecture de b
+    35 00000033 48BF-                       mov rdi, promptDoubleB
+    35 00000035 [1D00000000000000] 
+    36 0000003D B800000000                  mov rax, 0
+    37 00000042 E8(00000000)                call printf
+    38 00000047 48BF-                       mov rdi, promptDouble
+    38 00000049 [0000000000000000] 
+    39 00000051 48BE-                       mov rsi, b
+    39 00000053 [0800000000000000] 
+    40 0000005B B800000000                  mov rax, 0
+    41 00000060 E8(00000000)                call scanf
+    42                                  
+    43                                      ;saisie et lecture de c
+    44 00000065 48BF-                       mov rdi, promptDoubleC
+    44 00000067 [3600000000000000] 
+    45 0000006F B800000000                  mov rax, 0
+    46 00000074 E8(00000000)                call printf
+    47 00000079 48BF-                       mov rdi, promptDouble
+    47 0000007B [0000000000000000] 
+    48 00000083 48BE-                       mov rsi, c
+    48 00000085 [1000000000000000] 
+    49 0000008D B800000000                  mov rax, 0
+    50 00000092 E8(00000000)                call scanf
+    51                                  
+    52                                      ; traitement
+    53 00000097 F20F100425-                 movsd xmm0, [c]  ; xmm0 <- c
+    53 0000009C [10000000]         
+    54 000000A0 F20F5C0425-                 subsd xmm0, [b]  ; c <- c-b
+    54 000000A5 [08000000]         
+    55 000000A9 F20F5E0425-                 divsd xmm0, [a]  ; c <- c/a
+    55 000000AE [00000000]         
+    56 000000B2 F20F110425-                 movsd [result], xmm0
+    56 000000B7 [18000000]         
+    57                                  
+    58                                      ; affichage result
+    59 000000BB 48BF-                       mov rdi, promptResultat
+    59 000000BD [4F00000000000000] 
+    60 000000C5 F20F101C25-                 movsd xmm3, [result]
+    60 000000CA [18000000]         
+    61 000000CE F20F101425-                 movsd xmm2, [c]
+    61 000000D3 [10000000]         
+    62 000000D7 F20F100C25-                 movsd xmm1, [b]
+    62 000000DC [08000000]         
+    63 000000E0 F20F100425-                 movsd xmm0, [a]
+    63 000000E5 [00000000]         
+    64 000000E9 B802000000                  mov rax, 2
+    65 000000EE E8(00000000)                call printf
+    66                                  
+    67 000000F3 5D                          pop rbp
+    68 000000F4 C3                          ret
+    69                                  
